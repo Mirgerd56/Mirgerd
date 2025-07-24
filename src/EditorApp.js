@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Lienzo2D from './components/Lienzo2D';
+import Lienzo3D from './components/Lienzo3D';
 
 const themes = {
   light: {
@@ -19,6 +21,9 @@ const themes = {
 
 export default function EditorApp() {
   const [theme, setTheme] = useState('light');
+  const [mode, setMode] = useState('2D');
+  const [sprite, setSprite] = useState({});
+  const [model, setModel] = useState({});
   const t = themes[theme];
 
   return (
@@ -32,6 +37,16 @@ export default function EditorApp() {
         >
           Cambiar tema
         </button>
+        <div className="mb-4">
+          <button
+            className={`px-2 py-1 rounded-l ${mode === '2D' ? 'bg-blue-600 text-white' : 'bg-blue-200 text-blue-900'}`}
+            onClick={() => setMode('2D')}
+          >2D</button>
+          <button
+            className={`px-2 py-1 rounded-r ${mode === '3D' ? 'bg-blue-600 text-white' : 'bg-blue-200 text-blue-900'}`}
+            onClick={() => setMode('3D')}
+          >3D</button>
+        </div>
         <nav className="flex flex-col gap-2">
           <button className="text-left hover:underline">Proyectos</button>
           <button className="text-left hover:underline">Assets</button>
@@ -42,7 +57,13 @@ export default function EditorApp() {
       </aside>
       {/* Main Canvas */}
       <main className="flex-1 flex flex-col">
-        <div className={`flex-1 flex items-center justify-center ${t.panel}`}>Lienzo del juego (aquí irá Konva.js)</div>
+        <div className={`flex-1 flex items-center justify-center ${t.panel}`}>
+          {mode === '2D' ? (
+            <Lienzo2D sprite={sprite} onUpdate={setSprite} />
+          ) : (
+            <Lienzo3D model={model} onUpdate={setModel} />
+          )}
+        </div>
       </main>
       {/* Right Panel */}
       <aside className={`w-80 p-4 ${t.panel} ${t.border} border-l`}>
